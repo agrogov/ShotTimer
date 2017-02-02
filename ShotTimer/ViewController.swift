@@ -14,17 +14,10 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var ShotTimerLabel: UILabel!
     @IBOutlet weak var sensorsTableView: UITableView!
+
     
-    //Bottom bar buttons
-    @IBOutlet weak var btnStartLog: UIBarButtonItem!
-    @IBOutlet weak var btnCharge: UIBarButtonItem!
-    @IBOutlet weak var btnFCStart: UIBarButtonItem!
-    @IBOutlet weak var btnFCStop: UIBarButtonItem!
-    @IBOutlet weak var btnDrop: UIBarButtonItem!
-    
-    var xAxe = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
-    var ChartValues = [0.0]
     var logStarted : Bool = false
     
     // BLE
@@ -69,35 +62,11 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         }
     }
     
-    func chartUpdate(){
-        self.ChartValues.append(self.BT)
-        setChart(xAxe, values: self.ChartValues)
-    }
-    
-    func setChart(_ dataPoints: [Int], values: [Double]) {
-        
-        var dataEntries: [ChartDataEntry] = []
-        
-        for i in 0..<values.count {
-            let dataEntry = ChartDataEntry(value: values[i], xIndex: i)
-            dataEntries.append(dataEntry)
-        }
-        
-        let lineChartDataSet = LineChartDataSet(yVals: dataEntries, label: "BT")
-        let lineChartData = LineChartData(xVals: dataPoints, dataSet: lineChartDataSet)
-        lineChartView.data = lineChartData
-        
-        lineChartView.xAxis.labelPosition = .Bottom
-        
-        let ll = ChartLimitLine(limit: 150.0, label: "Drying")
-        lineChartView.rightAxis.addLimitLine(ll)
-    }
-    
     /******* CBCentralManagerDelegate *******/
     
     // Check status of BLE hardware
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        if central.state == CBCentralManagerState.poweredOn {
+        if central.state == CBManagerState.poweredOn {
             // Scan for peripherals if BLE is turned on
             central.scanForPeripherals(withServices: nil, options: nil)
             self.statusLabel.text = "Searching for BLE Devices"
@@ -195,14 +164,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
                 self.BT = Double(arr[1])
                 self.allSensorValues[0] = self.ET
                 self.allSensorValues[1] = self.BT
-                
-                if self.ChartValues[0] == 0.0 {
-                    self.ChartValues[0] = self.BT
-                } else {
-                    //self.ChartValues.append(self.BT)
-                }
             }
-            //setChart(xAxe, values: self.ChartValues)
         }
         
         self.sensorsTableView.reloadData()
@@ -253,10 +215,10 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         
         if !self.logStarted {
             self.logStarted = true
-            self.chartUpdate()
+            //self.chartUpdate()
             timer.invalidate() // just in case not started multiple times
             // Set up sensor update timer
-            timer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(self.chartUpdate), userInfo: nil, repeats: true)
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.ShotTimerLabel), userInfo: nil, repeats: true)
             //self.btnStartLog.title = "Stop"
         } else {
             self.logStarted = false
