@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 import CoreBluetooth
 
-let deviceName = "RLogCtrl"
+let deviceName = "ShotTimer"
 // Service UUIDs
 let UARTServiceUUID = CBUUID(string: "0000ffe0-0000-1000-8000-00805f9b34fb")
 // Characteristic UUIDs

@@ -12,7 +12,6 @@ import CoreBluetooth
 
 class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate, UITableViewDataSource, UITableViewDelegate {
     
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var ShotTimerLabel: UILabel!
     @IBOutlet weak var sensorsTableView: UITableView!
@@ -218,7 +217,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
             //self.chartUpdate()
             timer.invalidate() // just in case not started multiple times
             // Set up sensor update timer
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.ShotTimerLabel), userInfo: nil, repeats: true)
+            //timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.ShotTimerLabel), userInfo: nil, repeats: true)
             //self.btnStartLog.title = "Stop"
         } else {
             self.logStarted = false
